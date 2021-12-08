@@ -349,6 +349,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         const buttonTitleAsString = this.localize("ButtonTitle");
 
         setCardTitle(card, titleAsString);
+        setCardSubtitle(card, subtitleAsString);
         let imgUrl = getBaseUrl() + "/image/imagePlaceholder.png";
         setCardImageLink(card, imgUrl);
         setCardSummary(card, summaryAsString);

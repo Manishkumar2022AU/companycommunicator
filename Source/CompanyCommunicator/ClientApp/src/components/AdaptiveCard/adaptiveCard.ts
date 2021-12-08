@@ -32,6 +32,12 @@ export const getInitAdaptiveCard = (t: TFunction) => {
                     "wrap": true
                 },
                 {
+                    "type": "TextBlock",
+                    "wrap": true,
+                    "size": "ExtraLarge",
+                    "text": "",
+                },
+                {
                     "type": "Image",
                     "spacing": "Default",
                     "url": "",
