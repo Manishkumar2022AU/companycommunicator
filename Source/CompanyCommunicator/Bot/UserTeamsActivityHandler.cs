@@ -6,20 +6,24 @@
 namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Bot.Builder;
     using Microsoft.Bot.Builder.Teams;
     using Microsoft.Bot.Schema;
     using Microsoft.Bot.Schema.Teams;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.ReactionData;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Repositories.Extensions;
 
     /// <summary>
     /// Company Communicator User Bot.
-    /// Captures user data, team data.
+    /// Captures user reactions data, team data.
     /// </summary>
     public class UserTeamsActivityHandler : TeamsActivityHandler
     {
         private static readonly string TeamRenamedEventType = "teamRenamed";
+        private readonly IReactionDataRepository reactionDataRepository;
 
         private readonly TeamsDataCapture teamsDataCapture;
 
@@ -27,9 +31,63 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
         /// Initializes a new instance of the <see cref="UserTeamsActivityHandler"/> class.
         /// </summary>
         /// <param name="teamsDataCapture">Teams data capture service.</param>
-        public UserTeamsActivityHandler(TeamsDataCapture teamsDataCapture)
+        /// <param name="reactionDataRepository">Reaction Data.</param>
+        public UserTeamsActivityHandler(TeamsDataCapture teamsDataCapture, IReactionDataRepository reactionDataRepository)
         {
             this.teamsDataCapture = teamsDataCapture ?? throw new ArgumentNullException(nameof(teamsDataCapture));
+            this.reactionDataRepository = reactionDataRepository ?? throw new ArgumentNullException(nameof(reactionDataRepository));
+        }
+
+        /// <inheritdoc/>
+        protected override async Task OnMessageReactionActivityAsync(ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
+        {
+            if (turnContext.Activity.ReactionsAdded != null)
+            {
+                await this.OnReactionsAddedAsync(turnContext.Activity.ReactionsAdded, turnContext, cancellationToken);
+            }
+
+            if (turnContext.Activity.ReactionsRemoved != null)
+            {
+                await this.OnReactionsRemovedAsync(turnContext.Activity.ReactionsAdded, turnContext, cancellationToken);
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override async Task OnReactionsAddedAsync(IList<MessageReaction> messageReactions, ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
+        {
+            foreach (var reaction in messageReactions)
+            {
+                // The ReplyToId property of the inbound MessageReaction Activity will correspond to a Message Activity which
+                // had previously been sent from this bot.
+                var activity = turnContext.Activity;
+                if (activity == null)
+                {
+                    // If we had sent the message from the error handler we wouldn't have recorded the Activity Id and so we
+                    // shouldn't expect to see it in the log.
+                    throw new NotImplementedException();
+                }
+
+                await this.reactionDataRepository.SaveReactionDataAsync(reaction.Type, activity);
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override async Task OnReactionsRemovedAsync(IList<MessageReaction> messageReactions, ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
+        {
+            foreach (var reaction in messageReactions)
+            {
+                // The ReplyToId property of the inbound MessageReaction Activity will correspond to a Message Activity which
+                // was previously sent from this bot.
+                var activity = turnContext.Activity;
+                if (activity == null)
+                {
+                    // If we had sent the message from the error handler we wouldn't have recorded the Activity Id and so we
+                    // shouldn't expect to see it in the log.
+                    throw new NotImplementedException();
+                }
+
+                await this.reactionDataRepository.RemoveReactionDataAsync(reaction.Type, activity);
+            }
         }
 
         /// <summary>

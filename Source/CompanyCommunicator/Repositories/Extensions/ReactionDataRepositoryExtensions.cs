@@ -16,7 +16,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Repositories.Extensions
     public static class ReactionDataRepositoryExtensions
     {
         /// <summary>
-        /// Add channel data in Table Storage.
+        /// Add reactions data in Table Storage.
         /// </summary>
         /// <param name="reactionDataRepository">The reaction data repository.</param>
         /// <param name="reaction">User's Reaction.</param>
@@ -35,7 +35,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Repositories.Extensions
         }
 
         /// <summary>
-        /// Remove channel data in table storage.
+        /// Remove reactions data in table storage.
         /// </summary>
         /// <param name="reactionDataRepository">The reaction data repository.</param>
         /// <param name="reaction">User's Reaction.</param>
