@@ -27,9 +27,13 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Repositories.Extensions
             string reaction,
             IMessageReactionActivity activity)
         {
+            System.Diagnostics.Trace.TraceError("Tanya, Inside SaveReactionDataAsync");
             var reactionDataEntity = ReactionDataRepositoryExtensions.ParseReactionData(reaction, activity);
+            System.Diagnostics.Trace.TraceError("Tanya, Parsed activity - Reaction");
+            System.Diagnostics.Trace.TraceError(reactionDataEntity.Reaction);
             if (reactionDataEntity != null)
             {
+                System.Diagnostics.Trace.TraceError("Tanya, callinmg createorUpdateAsync");
                 await reactionDataRepository.CreateOrUpdateAsync(reactionDataEntity);
             }
         }
@@ -71,7 +75,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Repositories.Extensions
                     User = activity?.From?.Id,
                     Reaction = reaction,
                 };
-
+                System.Diagnostics.Trace.TraceError("Tanya, Inside ParseReactionData");
                 return reactionsDataEntity;
             }
 
