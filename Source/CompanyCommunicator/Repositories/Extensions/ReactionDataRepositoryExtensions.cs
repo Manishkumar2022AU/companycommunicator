@@ -33,7 +33,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Repositories.Extensions
             System.Diagnostics.Trace.TraceError(reactionDataEntity.Reaction);
             if (reactionDataEntity != null)
             {
-                System.Diagnostics.Trace.TraceError("Tanya, callinmg createorUpdateAsync");
+                System.Diagnostics.Trace.TraceError("Tanya, calling createorUpdateAsync");
                 await reactionDataRepository.CreateOrUpdateAsync(reactionDataEntity);
             }
         }
@@ -56,6 +56,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Repositories.Extensions
                 var found = await reactionDataRepository.GetAsync(reactionDataEntity.PartitionKey, reactionDataEntity.RowKey);
                 if (found != null)
                 {
+                    System.Diagnostics.Trace.TraceError("Tanya, found, calling DeleteAsync");
                     await reactionDataRepository.DeleteAsync(found);
                 }
             }

@@ -50,7 +50,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
 
             if (turnContext.Activity.ReactionsRemoved != null)
             {
-                await this.OnReactionsRemovedAsync(turnContext.Activity.ReactionsAdded, turnContext, cancellationToken);
+                await this.OnReactionsRemovedAsync(turnContext.Activity.ReactionsRemoved, turnContext, cancellationToken);
             }
         }
 
