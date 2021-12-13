@@ -41,10 +41,10 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
         /// <inheritdoc/>
         protected override async Task OnMessageReactionActivityAsync(ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
         {
-            System.Diagnostics.Trace.TraceError("Tanya, There's a reaction posted");
+            
             if (turnContext.Activity.ReactionsAdded != null)
             {
-                System.Diagnostics.Trace.TraceError("Tanya, There's a reaction added");
+                
                 await this.OnReactionsAddedAsync(turnContext.Activity.ReactionsAdded, turnContext, cancellationToken);
             }
 
@@ -64,14 +64,14 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
                 var activity = turnContext.Activity;
                 if (activity == null)
                 {
-                    System.Diagnostics.Trace.TraceError("Tanya, Reaction Activity is null");
+                    
 
                     // If we had sent the message from the error handler we wouldn't have recorded the Activity Id and so we
                     // shouldn't expect to see it in the log.
                     throw new NotImplementedException();
                 }
 
-                System.Diagnostics.Trace.TraceError("Tanya, calling SaveReactionDataAsync");
+                
                 await this.reactionDataRepository.SaveReactionDataAsync(reaction.Type, activity);
             }
         }
