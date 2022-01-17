@@ -20,6 +20,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Prep.Func.Test.PreparingToSen
     using Moq;
     using Xunit;
 
+    
     /// <summary>
     /// SendQueueOrchestrator test class.
     /// </summary>
